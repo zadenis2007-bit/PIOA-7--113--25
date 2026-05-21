@@ -1,104 +1,68 @@
-class Table:
+from database import Database
+
+
+class App:
     def __init__(self):
-        self.data = []
-        self.next_id = 1
+        self.db = Database()
 
-    def add(self, record):
-        record["id"] = self.next_id
-        self.next_id += 1
-        self.data.append(record)
+    def run(self):
+        while True:
+            print("\n1 - Add")
+            print("2 - Show all")
+            print("3 - Find by name")
+            print("4 - Update")
+            print("5 - Delete")
+            print("0 - Exit")
+            print("6 - Sort")
 
-    def get_all(self):
-        return self.data
+            choice = input("Choice: ")
 
-    def filter(self, name):
-        result = []
+            if choice == "1":
+                name = input("Name: ")
+                age = input("Age: ")
 
-        for record in self.data:
-            if record["name"] == name:
-                result.append(record)
+                self.db.table.add({
+                "name": name,
+                "age": age
+                })
 
-        return result
+                print("Added")
 
-    def update(self, record_id, name, age):
-        for record in self.data:
-            if record["id"] == record_id:
-                record["name"] = name
-                record["age"] = age
-                return True
+            elif choice == "2":
+                print(self.db.table.get_all())
 
-        return False
+            elif choice == "3":
+                name = input("Name: ")
+                print(self.db.table.filter(name))
 
-    def delete(self, record_id):
-        for record in self.data:
-            if record["id"] == record_id:
-                self.data.remove(record)
-                return True
+            elif choice == "4":
+                record_id = int(input("ID: "))
+                name = input("New name: ")
+                age = input("New age: ")
 
-        return False
+                ok = self.db.table.update(record_id, name, age)
+                print("Updated" if ok else "Not found")
+
+            elif choice == "5":
+                record_id = int(input("ID: "))
+                ok = self.db.table.delete(record_id)
+                print("Deleted" if ok else "Not found")
+
+            elif choice == "6":
+                field = input("Field (id/name/age): ")
+                order = input("Order (asc/desc): ")
+
+                reverse = order == "desc" 
+
+                result = self.db.table.sort_by(field, reverse)
+                print(result)       
+
+            elif choice == "0":
+                break
+
+            else:
+                print("Wrong input")
 
 
-class Database:
-    def __init__(self):
-        self.table = Table()
-
-
-db = Database()
-
-
-while True:
-    print("\n1 - Add")
-    print("2 - Show all")
-    print("3 - Find by name")
-    print("4 - Update")
-    print("5 - Delete")
-    print("0 - Exit")
-
-    choice = input("Choice: ")
-
-    if choice == "1":
-        name = input("Name: ")
-        age = input("Age: ")
-
-        db.table.add({
-            "name": name,
-            "age": age
-        })
-
-        print("Added")
-
-    elif choice == "2":
-        print(db.table.get_all())
-
-    elif choice == "3":
-        name = input("Name: ")
-        print(db.table.filter(name))
-
-    elif choice == "4":
-        record_id = int(input("ID: "))
-        name = input("New name: ")
-        age = input("New age: ")
-
-        ok = db.table.update(record_id, name, age)
-
-        if ok:
-            print("Updated")
-        else:
-            print("Not found")
-
-    elif choice == "5":
-        record_id = int(input("ID: "))
-
-        ok = db.table.delete(record_id)
-
-        if ok:
-            print("Deleted")
-        else:
-            print("Not found")
-
-    elif choice == "0":
-        break
-
-    else:
-        print("Wrong input")  
-     
+if __name__ == "__main__":
+    App().run()
