@@ -3,30 +3,24 @@ from database import Database
 
 class App:
     def __init__(self):
-        self.db = Database()
+        self.db = Database(mode="file") # или memory
 
     def run(self):
         while True:
             print("\n1 - Add")
             print("2 - Show all")
-            print("3 - Find by name")
+            print("3 - Find")
             print("4 - Update")
             print("5 - Delete")
-            print("0 - Exit")
             print("6 - Sort")
+            print("0 - Exit")
 
             choice = input("Choice: ")
 
             if choice == "1":
                 name = input("Name: ")
                 age = input("Age: ")
-
-                self.db.table.add({
-                "name": name,
-                "age": age
-                })
-
-                print("Added")
+                self.db.table.add({"name": name, "age": age})
 
             elif choice == "2":
                 print(self.db.table.get_all())
@@ -36,32 +30,25 @@ class App:
                 print(self.db.table.filter(name))
 
             elif choice == "4":
-                record_id = int(input("ID: "))
-                name = input("New name: ")
-                age = input("New age: ")
-
-                ok = self.db.table.update(record_id, name, age)
-                print("Updated" if ok else "Not found")
+                try:
+                    rid = int(input("ID: "))
+                    name = input("Name: ")
+                    age = input("Age: ")
+                    print(self.db.table.update(rid, name, age))
+                except:
+                    print("Error")
 
             elif choice == "5":
-                record_id = int(input("ID: "))
-                ok = self.db.table.delete(record_id)
-                print("Deleted" if ok else "Not found")
+                rid = int(input("ID: "))
+                print(self.db.table.delete(rid))
 
             elif choice == "6":
-                field = input("Field (id/name/age): ")
-                order = input("Order (asc/desc): ")
-
-                reverse = order == "desc" 
-
-                result = self.db.table.sort_by(field, reverse)
-                print(result)       
+                field = input("Field: ")
+                order = input("asc/desc: ")
+                print(self.db.table.sort_by(field, order == "desc"))
 
             elif choice == "0":
                 break
-
-            else:
-                print("Wrong input")
 
 
 if __name__ == "__main__":
