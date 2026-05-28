@@ -1,38 +1,71 @@
-import unittest
-import os
-from file_table import FileTable
+def test_empty_table(self):
+  result = self.table.select_all()
 
+  self.assertEqual(result, [])
 
-class TestFileTable(unittest.TestCase):
+def test_load_nonexistent_file(self):
+  if os.path.exists("temp.json"):
+    os.remove("temp.json")
 
-    def setUp(self):
-        self.file = "test.json"
-        if os.path.exists(self.file):
-            os.remove(self.file)
-        self.table = FileTable(self.file)
+  table = FileTable("temp.json")
 
-    def test_add(self):
-        self.table.add({"name": "A", "age": 20})
-        self.assertEqual(len(self.table.get_all()), 1)
+  self.assertEqual(table.data, [])
+  self.assertEqual(table.next_id, 1)
 
-    def test_update(self):
-        self.table.add({"name": "A", "age": 20})
-        self.assertTrue(self.table.update(1, "B", 30))
+  if os.path.exists("temp.json"):
+    os.remove("temp.json")
 
-    def test_delete(self):
-        self.table.add({"name": "A", "age": 20})
-        self.assertTrue(self.table.delete(1))
+def test_delete_then_select(self):
+  self.table.insert({"name": "Test"})
+  self.table.delete(1)
 
-    def test_filter(self):
-        self.table.add({"name": "A", "age": 20})
-        self.assertEqual(len(self.table.filter("A")), 1)
+  result = self.table.select_by_id(1)
 
-    def test_sort(self):
-        self.table.add({"name": "A", "age": 30})
-        self.table.add({"name": "B", "age": 10})
-        res = self.table.sort_by("age")
-        self.assertEqual(res[0]["age"], 10)
+  self.assertIsNone(result)
 
+def test_update_persists_after_reload(self):
+  self.table.insert({"name": "Old"})
+  self.table.update(1, {"name": "New"})
 
-if __name__ == "__main__":
-    unittest.main()
+  new_table = FileTable(self.TEST_FILE)
+
+  result = new_table.select_by_id(1)
+
+  self.assertEqual(result["name"], "New")
+
+def test_delete_persists_after_reload(self):
+  self.table.insert({"name": "Delete"})
+  self.table.delete(1)
+
+  new_table = FileTable(self.TEST_FILE)
+
+  self.assertEqual(len(new_table.data), 0)
+
+def test_multiple_inserts_ids(self):
+  self.table.insert({"name": "A"})
+  self.table.insert({"name": "B"})
+  self.table.insert({"name": "C"})
+
+  self.assertEqual(self.table.data[0]["id"], 1)
+  self.assertEqual(self.table.data[1]["id"], 2)
+  self.assertEqual(self.table.data[2]["id"], 3)
+
+def test_insert_empty_data(self):
+  self.table.insert({})
+
+  result = self.table.select_by_id(1)
+
+  self.assertEqual(result["id"], 1)
+
+def test_load_invalid_json(self):
+  with open(self.TEST_FILE, "w", encoding="utf-8") as f:
+    f.write("INVALID JSON")
+
+  table = FileTable(self.TEST_FILE)
+
+  self.assertEqual(table.data, [])
+
+def test_save_creates_file(self):
+  self.table.insert({"name": "FileTest"})
+
+  self.assertTrue(os.path.exists(self.TEST_FILE))
