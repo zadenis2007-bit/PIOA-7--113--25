@@ -38,7 +38,7 @@ class FileTable(BaseTable):
         self.save()
 
     def get_all(self):
-        return self.data
+        return [r.copy() for r in self.data]
 
     def filter(self, name):
         return [r for r in self.data if r["name"] == name]
@@ -58,7 +58,14 @@ class FileTable(BaseTable):
                 self.data.remove(r)
                 self.save()
                 return True
+                
         return False
 
     def sort_by(self, field, reverse=False):
+        if not self.data:
+            return []
+
+        if field not in self.data[0]:
+            return []
+            
         return sorted(self.data, key=lambda x: x[field], reverse=reverse)
