@@ -12,18 +12,32 @@ class App:
             print("3 - Find by name")
             print("4 - Update")
             print("5 - Delete")
-            print("0 - Exit")
             print("6 - Sort")
+            print("0 - Exit")
 
             choice = input("Choice: ")
 
             if choice == "1":
-                name = input("Name: ")
-                age = input("Age: ")
+                name = input("Name: ").strip()
+
+                if not name:
+                    print("Name cannot be empty")
+                    continue
+
+                try:
+                    age = int(input("Age: "))
+
+                    if age <= 0:
+                        print("Age must be positive")
+                        continue
+
+                except ValueError:
+                    print("Age must be a number")
+                    continue
 
                 self.db.table.add({
-                "name": name,
-                "age": age
+                    "name": name,
+                    "age": age
                 })
 
                 print("Added")
@@ -36,32 +50,52 @@ class App:
                 print(self.db.table.filter(name))
 
             elif choice == "4":
-                record_id = int(input("ID: "))
+                try:
+                    record_id = int(input("ID: "))
+                except ValueError:
+                    print("ID must be a number")
+                    continue
+
                 name = input("New name: ")
                 age = input("New age: ")
 
-                ok = self.db.table.update(record_id, name, age)
+                ok = self.db.table.update(
+                    record_id,
+                    name,
+                    age
+                )
+
                 print("Updated" if ok else "Not found")
 
             elif choice == "5":
-                record_id = int(input("ID: "))
+                try:
+                    record_id = int(input("ID: "))
+                except ValueError:
+                    print("ID must be a number")
+                    continue
+
                 ok = self.db.table.delete(record_id)
+
                 print("Deleted" if ok else "Not found")
 
             elif choice == "6":
                 field = input("Field (id/name/age): ")
                 order = input("Order (asc/desc): ")
 
-                reverse = order == "desc" 
+                reverse = order == "desc"
 
-                result = self.db.table.sort_by(field, reverse)
-                print(result)       
+                result = self.db.table.sort_by(
+                    field,
+                    reverse
+                )
 
-            elif choice == "0":
-                break
+                print(result)
 
-            else:
-                print("Wrong input")
+        elif choice == "0":
+            break
+
+        else:
+            print("Wrong input")
 
 
 if __name__ == "__main__":
