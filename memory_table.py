@@ -12,7 +12,7 @@ class MemoryTable(BaseTable):
         self.data.append(record)
 
     def get_all(self):
-        return self.data
+        return [r.copy() for r in self.data]
 
     def filter(self, name):
         return [r for r in self.data if r["name"] == name]
@@ -23,14 +23,16 @@ class MemoryTable(BaseTable):
                 r["name"] = name
                 r["age"] = age
                 return True
-            return False
 
-    def delete(self, record_id):
-        for r in self.data:
-            if r["id"] == record_id:
-                self.data.remove(r)
-                return True
-            return False
+        return False
+
+def delete(self, record_id):
+    for r in self.data:
+        if r["id"] == record_id:
+            self.data.remove(r)
+            return True
+
+    return False
 
 def sort_by(self, field, reverse=False):
     return sorted(self.data, key=lambda x: x[field], reverse=reverse)
