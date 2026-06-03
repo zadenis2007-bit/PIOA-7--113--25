@@ -3,7 +3,7 @@ from database import Database
 
 class App:
     def __init__(self):
-        self.db = Database(mode="file") # или memory
+        self.db = Database(mode="file")
 
     def run(self):
         while True:
@@ -20,7 +20,10 @@ class App:
             if choice == "1":
                 name = input("Name: ")
                 age = input("Age: ")
-                self.db.table.add({"name": name, "age": age})
+                self.db.table.add({
+                    "name": name, 
+                    "age": age
+                })
 
             elif choice == "2":
                 print(self.db.table.get_all())
@@ -34,22 +37,33 @@ class App:
                     rid = int(input("ID: "))
                     name = input("Name: ")
                     age = input("Age: ")
+                    
                     print(self.db.table.update(rid, name, age))
-                except:
-                    print("Error")
-
+                    
+                except ValueError:
+                    print("ID must be a number")
+                
             elif choice == "5":
-                rid = int(input("ID: "))
-                print(self.db.table.delete(rid))
+                try:
+                    rid = int(input("ID: "))
+                    print(self.db.table.delete(rid))
+                    
+                except ValueError:
+                    print("ID must be a number")
 
             elif choice == "6":
                 field = input("Field: ")
                 order = input("asc/desc: ")
-                print(self.db.table.sort_by(field, order == "desc"))
+
+                reverse = (order == "desc")
+                
+                print(self.db.table.sort_by(field, reverse))
 
             elif choice == "0":
                 break
-
+                
+            else:
+                print("Wrong input")
 
 if __name__ == "__main__":
     App().run()
