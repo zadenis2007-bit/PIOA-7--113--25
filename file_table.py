@@ -11,15 +11,26 @@ class FileTable(BaseTable):
         self.load()
 
     def load(self):
-        if os.path.exists(self.filename):
-            try:
-                with open(self.filename, "r", encoding="utf-8") as f:
-                    content = json.load(f)
-                    self.data = content.get("data", [])
-                    self.next_id = content.get("next_id", 1)
-            except Exception:
-                self.data = []
-                self.next_id = 1
+        if not os.path.exists(self.filename):
+            return
+            
+        try:
+            with open(self.filename, "r", encoding="utf-8") as f:
+                content = json.load(f)
+                    
+            self.data = content.get("data", [])
+            self.next_id = content.get("next_id", 1)
+                    
+        except json.JSONDecodeError as e:
+            raise ValueError(
+                f"Invalid JSON format in file '{self.filename}'"
+            ) from e
+
+        except OSError as e:
+            raise OSError(
+                f"Cannot open file '{self.filename}'"
+            ) from e    
+
 
     def save(self):
         try:
