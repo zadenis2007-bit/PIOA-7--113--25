@@ -3,7 +3,16 @@ from database import Database
 
 class App:
     def __init__(self):
-        self.db = Database(mode="file")
+        print("1 - Memory database")
+        print("2 - File database")
+
+        choice = input("Choice: ")
+
+        if choice == "2":
+            self.db = Database(mode="file")
+        else:
+            self.db = Database(mode="memory")
+
 
     def run(self):
         while True:
