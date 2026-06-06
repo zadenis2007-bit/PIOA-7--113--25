@@ -26,13 +26,13 @@ class MemoryTable(BaseTable):
 
         return False
 
-def delete(self, record_id):
-    for r in self.data:
-        if r["id"] == record_id:
-            self.data.remove(r)
-            return True
+    def delete(self, record_id):
+        for r in self.data:
+            if r["id"] == record_id:
+                self.data.remove(r)
+                return True
 
-    return False
+        return False
 
-def sort_by(self, field, reverse=False):
-    return sorted(self.data, key=lambda x: x[field], reverse=reverse)
+    def sort_by(self, field, reverse=False):
+        return sorted(self.data, key=lambda x: x[field], reverse=reverse)
