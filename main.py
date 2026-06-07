@@ -27,8 +27,23 @@ class App:
             choice = input("Choice: ")
 
             if choice == "1":
-                name = input("Name: ")
-                age = input("Age: ")
+                name = input("Name: ").strip()
+
+                if not name:
+                    print("Name cannot be empty")
+                    continue
+
+                try:
+                    age = int(input("Age: "))
+
+                    if age < 0:
+                        print("Age must be positive")
+                        continue
+
+                except ValueError:
+                    print("Age must be a number")
+                    continue
+                    
                 self.db.table.add({
                     "name": name, 
                     "age": age
@@ -44,8 +59,17 @@ class App:
             elif choice == "4":
                 try:
                     rid = int(input("ID: "))
-                    name = input("Name: ")
-                    age = input("Age: ")
+                    name = input("Name: ").strip()
+
+                    if not name:
+                        print("Name cannot be empty")
+                        continue
+
+                    age = int(input("Age: "))
+
+                    if age < 0:
+                        print("Age must be positive")
+                        continue
                     
                     print(self.db.table.update(rid, name, age))
                     
