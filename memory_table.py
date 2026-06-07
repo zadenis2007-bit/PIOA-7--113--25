@@ -14,8 +14,15 @@ class MemoryTable(BaseTable):
     def get_all(self):
         return [r.copy() for r in self.data]
 
-    def filter(self, name):
-        return [r for r in self.data if r["name"] == name]
+    def filter(self, **filters):
+        result = []
+
+        for record in self.data:
+            if all(record.get(key) == value
+                   for key, value in filters.items()):
+                result.append(record.copy())
+
+        return result
 
     def update(self, record_id, name, age):
         for r in self.data:
@@ -35,4 +42,14 @@ class MemoryTable(BaseTable):
         return False
 
     def sort_by(self, field, reverse=False):
-        return sorted(self.data, key=lambda x: x[field], reverse=reverse)
+        if not self.data:
+            return []
+
+        if field not in self.data[0]:
+            return []
+
+        return sorted(
+            self.data,
+            key=lambda x: x[field],
+            reverse=reverse
+        )
