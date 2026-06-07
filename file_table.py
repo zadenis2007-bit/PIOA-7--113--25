@@ -39,8 +39,10 @@ class FileTable(BaseTable):
                     "data": self.data,
                     "next_id": self.next_id
                 }, f, indent=4, ensure_ascii=False)
-        except Exception as e:
-            print("File error:", e)
+        except OSError as e:
+            raise OSError(
+                f"Cannot save file '{self.filename}'"
+            ) from e
 
     def add(self, record):
         record["id"] = self.next_id
@@ -51,8 +53,15 @@ class FileTable(BaseTable):
     def get_all(self):
         return [r.copy() for r in self.data]
 
-    def filter(self, name):
-        return [r for r in self.data if r["name"] == name]
+    def filter(self, **filters):
+        result = []
+
+        for record in self.data:
+            if all(record.get(key) == value
+                   for key, value in filters.items()):
+                result.append(record.copy())
+
+        return result
 
     def update(self, record_id, name, age):
         for r in self.data:
@@ -79,4 +88,8 @@ class FileTable(BaseTable):
         if field not in self.data[0]:
             return []
             
-        return sorted(self.data, key=lambda x: x[field], reverse=reverse)
+        return sorted(
+            self.data, 
+            key=lambda x: x[field], 
+            reverse=reverse
+        )
