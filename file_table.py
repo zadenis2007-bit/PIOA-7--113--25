@@ -64,6 +64,9 @@ class FileTable(BaseTable):
         if "name" not in record:
             raise ValueError("Missing field: name")
 
+        if not record["name"].strip():
+            raise ValueError("Name connot be empty")
+
         if "age" not in record:
             raise ValueError("Missing field: age")
 
