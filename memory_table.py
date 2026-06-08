@@ -7,6 +7,21 @@ class MemoryTable(BaseTable):
         self.next_id = 1
 
     def add(self, record):
+        if "name" not in record:
+            raise ValueError("Missing field: name")
+
+        if "age" not in record:
+            raise ValueError("Missing field: age")
+
+        if not isinstance(record["name"], str):
+            raise ValueError("Name must be string")
+
+        if not isinstance(record["age"], int):
+            raise ValueError("Age must be integer")
+
+        if record["age"] < 0:
+            raise ValueError("Age must be positive")
+            
         record["id"] = self.next_id
         self.next_id += 1
         self.data.append(record)
