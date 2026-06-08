@@ -17,9 +17,25 @@ class FileTable(BaseTable):
         try:
             with open(self.filename, "r", encoding="utf-8") as f:
                 content = json.load(f)
-                    
-            self.data = content.get("data", [])
-            self.next_id = content.get("next_id", 1)
+                
+            if not isinstance(content, dict):
+                raise ValueError("Invalid file structure")
+
+            if "data" not in content or "next_id" not in content:
+                raise ValueError("Missing required fields")
+
+            if not isinstance(content["data"], list):
+                raise ValueError("'data' must be a list")
+
+            if not isinstance(content["next_id"], int):
+                raise ValueError("'next_id' must be an integer")
+
+            for record in content["data"]:
+                if not isinstance(record, dict):
+                    raise ValueError("Invalid record format")
+           
+            self.data = content["data"]
+            self.next_id = content["next_id"]
                     
         except json.JSONDecodeError as e:
             raise ValueError(
