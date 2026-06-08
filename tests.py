@@ -30,7 +30,7 @@ class TestFileTable(unittest.TestCase):
 
   def test_filter(self):
     self.table.add({"name": "Denis", "age": 18})
-    result = self.table.filter("Denis")
+    result = self.table.filter(name="Denis")
     self.assertEqual(len(result), 1)
 
   def test_update(self):
@@ -60,7 +60,7 @@ class TestMemoryTable(unittest.TestCase):
 
   def test_filter(self):
     self.table.add({"name": "Denis", "age": 18})
-    self.assertEqual(len(self.table.filter("Denis")), 1)
+    self.assertEqual(len(self.table.filter(name="Denis")), 1)
 
   def test_update_success(self):
     self.table.add({"name": "Old", "age": 10})
