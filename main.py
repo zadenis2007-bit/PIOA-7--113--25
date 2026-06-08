@@ -53,9 +53,18 @@ class App:
                 print(self.db.table.get_all())
 
             elif choice == "3":
-                name = input("Name: ")
-                print(self.db.table.filter(name))
+                name = input("Name: ").strip()
 
+                if not name:
+                    print("Name cannot be empty")
+                    continue
+                    
+                print(
+                    self.db.table.filter(
+                        name=name
+                    )
+                )
+                
             elif choice == "4":
                 try:
                     rid = int(input("ID: "))
