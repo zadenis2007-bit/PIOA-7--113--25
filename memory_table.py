@@ -24,10 +24,12 @@ class MemoryTable(BaseTable):
 
         if record["age"] < 0:
             raise ValueError("Age must be positive")
-            
-        record["id"] = self.next_id
+
+        new_record = record_copy()
+        new_record["id"] = self.next_id
+        
         self.next_id += 1
-        self.data.append(record)
+        self.data.append(new_record)
 
     def get_all(self):
         return [r.copy() for r in self.data]
