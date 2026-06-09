@@ -8,11 +8,11 @@ class App:
 
         choice = input("Choice: ")
 
-        if choice == "2":
-            self.db = Database(mode="file")
+        if choice == "1":
+            self.db = Database(mode="memory")
             
         elif choice == "2":
-            self.db = Database(mode="memory")
+            self.db = Database(mode="file")
 
         else:
             raise ValueError("Invalid database type")
