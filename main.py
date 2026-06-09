@@ -10,8 +10,12 @@ class App:
 
         if choice == "2":
             self.db = Database(mode="file")
-        else:
+            
+        elif choice == "2":
             self.db = Database(mode="memory")
+
+        else:
+            raise ValueError("Invalid database type")
 
 
     def run(self):
