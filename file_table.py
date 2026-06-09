@@ -30,6 +30,9 @@ class FileTable(BaseTable):
             if not isinstance(content["next_id"], int):
                 raise ValueError("'next_id' must be an integer")
 
+            if content["next_id"] < 1:
+                raise ValueError("'next_id' must be positive")
+
             for record in content["data"]:
                 if not isinstance(record, dict):
                     raise ValueError("Invalid record format")
@@ -46,8 +49,14 @@ class FileTable(BaseTable):
                 if not isinstance(record["name"], str):
                     raise ValueError("Invalid name")
 
+                if not record["name"].strip():
+                    raise ValueError("Name cannot be empty")
+
                 if not isinstance(record["age"], int):
                     raise ValueError("Invalid age")
+
+                if record["age"] < 0:
+                    raise ValueError("Age must be positive")
            
             self.data = content["data"]
             self.next_id = content["next_id"]
