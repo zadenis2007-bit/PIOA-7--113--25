@@ -113,12 +113,26 @@ class FileTable(BaseTable):
         return result
 
     def update(self, record_id, name, age):
+
+        if not isinstance(name, str):
+            raise ValueError("Name must be string")
+
+        if not name.strip():
+            raise ValueError("Name cannot be empty")
+
+        if not isinstance(age, int):
+            raise ValueError("Age must be integer")
+
+        if age < 0:
+            raise ValueError("Age must be positive")
+
         for r in self.data:
             if r["id"] == record_id:
                 r["name"] = name
                 r["age"] = age
                 self.save()
                 return True
+                
         return False
 
     def delete(self, record_id):
