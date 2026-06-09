@@ -33,6 +33,21 @@ class FileTable(BaseTable):
             for record in content["data"]:
                 if not isinstance(record, dict):
                     raise ValueError("Invalid record format")
+
+                required_fields = ["id", "name", "age"]
+
+                for field in required_fields:
+                    if field not in record:
+                        raise ValueError(f"Missing field: {field}")
+
+                if not isinstance(record["id"], int):
+                    raise ValueError("Invalid id")
+
+                if not isinstance(record["name"], str):
+                    raise ValueError("Invalid name")
+
+                if not isinstance(record["age"], int):
+                    raise ValueError("Invalid age")
            
             self.data = content["data"]
             self.next_id = content["next_id"]
