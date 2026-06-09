@@ -10,14 +10,14 @@ class MemoryTable(BaseTable):
         if "name" not in record:
             raise ValueError("Missing field: name")
 
-        if not record["name"].strip():
-            raise ValueError("Name connot be empty")
-
         if "age" not in record:
             raise ValueError("Missing field: age")
 
         if not isinstance(record["name"], str):
             raise ValueError("Name must be string")
+
+        if not record["name"].strip():
+            raise ValueError("Name cannot be empty")
 
         if not isinstance(record["age"], int):
             raise ValueError("Age must be integer")
@@ -43,6 +43,19 @@ class MemoryTable(BaseTable):
         return result
 
     def update(self, record_id, name, age):
+
+        if not isinstance(name, str):
+            raise ValueError("Name must be string")
+
+        if not name.strip():
+            raise ValueError("Name cannot be empty")
+
+        if not isinstance(age, int):
+            raise ValueError("Age must be integer")
+
+        if age < 0:
+            raise ValueError("Age must be positive")
+
         for r in self.data:
             if r["id"] == record_id:
                 r["name"] = name
@@ -66,8 +79,9 @@ class MemoryTable(BaseTable):
         if field not in self.data[0]:
             return []
 
-        return sorted(
+        result = sorted(
             self.data,
             key=lambda x: x[field],
             reverse=reverse
         )
+        return [r.copy() for r in result]
