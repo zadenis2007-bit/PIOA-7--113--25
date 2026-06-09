@@ -25,7 +25,7 @@ class MemoryTable(BaseTable):
         if record["age"] < 0:
             raise ValueError("Age must be positive")
 
-        new_record = record_copy()
+        new_record = record.copy()
         new_record["id"] = self.next_id
         
         self.next_id += 1
