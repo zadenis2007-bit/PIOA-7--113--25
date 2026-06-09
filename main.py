@@ -70,24 +70,30 @@ class App:
                 )
                 
             elif choice == "4":
+
                 try:
                     rid = int(input("ID: "))
-                    name = input("Name: ").strip()
-
-                    if not name:
-                        print("Name cannot be empty")
-                        continue
-
-                    age = int(input("Age: "))
-
-                    if age < 0:
-                        print("Age must be positive")
-                        continue
-                    
-                    print(self.db.table.update(rid, name, age))
-                    
                 except ValueError:
                     print("ID must be a number")
+                    continue
+
+                name = input("Name: ").strip()
+
+                if not name:
+                    print("Name cannot be empty")
+                    continue
+
+                try:
+                    age = int(input("Age: "))
+                except ValueError:
+                    print("Age must be a number")
+                    continue
+
+                if age < 0:
+                    print("Age must be positive")
+                    continue
+
+                print(self.db.table.update(rid, name, age))
                 
             elif choice == "5":
                 try:
